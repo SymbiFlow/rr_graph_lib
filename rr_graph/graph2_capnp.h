@@ -1,13 +1,13 @@
+#include <capnp/message.h>
 #include "rr_graph_uxsdcxx.capnp.h"
 
 namespace graph2 {
 
 class RrEdgesInserter {
 public:
-    void init(capnp::MessageBuilder base, unsigned int num_edges) {
-        builder_ = base.getRoot<ucap::RrGraph>().getRrEdges();
-        edges_ = builder_.initEdges(num_edges);
-    }
+    RrEdgesInserter(::capnp::MessageBuilder *base, unsigned int num_edges)
+        : builder_(base->getRoot<ucap::RrGraph>().getRrEdges())
+        , edges_(builder_.initEdges(num_edges)) {}
 
     void add_edge(
             unsigned int index,

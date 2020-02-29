@@ -1,6 +1,7 @@
 import os.path
 import re
 from . import graph2
+from . import graph2_cpy
 from . import tracks
 import gc
 
@@ -444,10 +445,17 @@ class Graph(object):
 
         """
 
-        out_edges = rr_graph.rrEdges.init('edges', num_edges)
+        edge_inserter = graph2_cpy._RrEdgesInserter(rr_graph._parent, num_edges)
 
         edges_written = 0
         edges_iter = iter(edges)
+        for idx, (src_node, sink_node, switch_id, _) in enumerate(edges_iter):
+            edges_written += 1
+            edge_inserter.add_Edge(src_node, sink_node, switch_id)
+
+        """
+        out_edges = rr_graph.rrEdges.init('edges', num_edges)
+
         for out_edge, (src_node, sink_node, switch_id,
                        metadata) in zip(out_edges, edges_iter):
             edges_written += 1
@@ -455,11 +463,12 @@ class Graph(object):
             out_edge.sinkNode = node_remap(sink_node)
             out_edge.switchId = switch_id
 
-            if metadata is not None and len(metadata) > 0:
-                metas = out_edge.metadata.init('metas', len(metadata))
-                for out_meta, (name, value) in zip(metas, metadata):
-                    out_meta.name = name
-                    out_meta.value = value
+            #if metadata is not None and len(metadata) > 0:
+            #    metas = out_edge.metadata.init('metas', len(metadata))
+            #    for out_meta, (name, value) in zip(metas, metadata):
+            #        out_meta.name = name
+            #        out_meta.value = value
+        """
 
         assert edges_written == num_edges, 'Unwritten edges!'
 
