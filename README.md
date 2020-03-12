@@ -1,4 +1,8 @@
-# rr_graph_lib
+# rr\_graph\_lib
+
+This is an experimental copy of the rr graph libraries from
+symbiflow-arch-defs.  This is testing the use of Cython to accelerate writing
+capnp RR files.
 
 ## Summary of datastructures
 
